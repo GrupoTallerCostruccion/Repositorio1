@@ -1,11 +1,20 @@
+INSERT INTO usuario VALUES("fcatalan","1234")
+INSERT INTO imagen VALUES (3,"imagen/yaris.png", 5,5)
+
+SELECT *, COUNT(*) AS "Ventas" FROM modelo
+JOIN auto ON  auto.modelo_id = modelo.id GROUP BY modelo.id
+
+SELECT marca.nombre,marca.pais, COUNT(marca.id) AS "Cantidad de Modelos" FROM marca 
+JOIN modelo ON modelo.marca_id = marca.id GROUP BY marca.id
 
 
-
-
-INSERT INTO marca VALUES(48, "DAIHATSU", "Japon")
-INSERT INTO modelo VALUES(121,48, "MODEL X9..","motor ABC1", 1231,"sd","12km/l","imagen","fecha","lista")
-
-DELETE FROM marca WHERE marca.id = 48
-DELETE FROM modelo WHERE modelo.marca_id=48
-DELETE FROM imagen WHERE imagen.modelo_marca_id =48
+-------DUDA: la columna imágen de la tabla modelos debecontener la direccion de la imagen  o el id a la "imagen" de la tabla imagen??------------
+UPDATE modelo SET imagen="3" WHERE id = 5
+--------------------------------------
+INSERT INTO marca VALUES(48, "DAIHATSU", "Japon")
+INSERT INTO modelo VALUES(121,48, "MODEL X9..","motor ABC1", 1231,"sd","12km/l","imagen","fecha","lista")
+
+DELETE FROM marca WHERE marca.id = 48
+DELETE FROM modelo WHERE modelo.marca_id=48
+DELETE FROM imagen WHERE imagen.modelo_marca_id =48
 DELETE FROM auto WHERE auto.modelo_marca_id = 48
