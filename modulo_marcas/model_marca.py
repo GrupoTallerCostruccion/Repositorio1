@@ -26,9 +26,6 @@ def obtener_marcas():
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()
-    for x in marcas:
-        print (x[0]," ",x[1]," ",x[2]," ")
-    return marcas
 
 
 def obtener_marca_nombre(nombre):

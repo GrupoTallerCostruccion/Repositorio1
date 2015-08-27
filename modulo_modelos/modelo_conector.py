@@ -18,7 +18,7 @@ def obtener_query(consulta_sql):
     c = conectar()
     resultado = c.execute(consulta_sql)
     tabla = resultado.fetchall()
-    con.close()
+    c.close()
     return tabla
 
 def borrar_elemento(tabla, nombre_columna, parametro):
@@ -57,12 +57,7 @@ def obtener_clientes():
     return obtener_query(query)
 
 def obtener_modelos():
-    query="""SELECT modelo.marca_id, modelo.modelo as Modelo, modelo.motor
-    as Motor, modelo.peso as Peso,modelo.descripcion as Descripcion,
-    modelo.rendimiendo as Rendimiento ,modelo.imagen,
-    modelo.fecha_creacion as Fecha,modelo.precio_lista
-    as Precio, 
-    COUNT(modelo.id) AS "Ventas" FROM modelo
+    query="""SELECT *, COUNT(*) AS "Ventas" FROM modelo
     JOIN auto ON  auto.modelo_id = modelo.id
     GROUP BY modelo.id"""
     return obtener_query(query)
