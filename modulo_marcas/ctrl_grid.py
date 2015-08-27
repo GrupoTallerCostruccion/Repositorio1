@@ -4,6 +4,7 @@ import sys
 from PySide import QtGui, QtCore
 from ui import Ui_MainWindow
 import model_marca as db_marcas
+#from ctrl_form import FormMarcas
 
 
 class Main(QtGui.QMainWindow):
@@ -24,40 +25,41 @@ class Main(QtGui.QMainWindow):
         #self.ui.eliminar_marca.connect(self.delete)
 
     def add(self):
-        self.ui.form = FormAlumno(self)
+        self.ui.form = FormMarca(self)
         self.ui.form.accepted.connect(self.load_data)
         self.ui.form.show()
 
     def load_data(self):
         """
         Función que carga la información de marcas en la grilla
+        incluyendo la cantidad de modelos asociados a la marca
         """
         marcas = db_marcas.obtener_marcas()
         #Creamos el modelo asociado a la tabla
         self.data = QtGui.QStandardItemModel(len(marcas)+1, 3)
         self.data.setHorizontalHeaderItem(
-            0, QtGui.QStandardItem(u"id"))
+            0, QtGui.QStandardItem(u"Nombre de Marca"))
         self.data.setHorizontalHeaderItem(
-            1, QtGui.QStandardItem(u"nombre"))
+            1, QtGui.QStandardItem(u"País de Origen"))
         self.data.setHorizontalHeaderItem(
-            2, QtGui.QStandardItem(u"pais"))
+            2, QtGui.QStandardItem(u"Cantidad de Modelos"))
 
         for r, row in enumerate(marcas):
             index = self.data.index(r, 0, QtCore.QModelIndex())
-            self.data.setData(index, row['id'])
+            self.data.setData(index, row['Nombre de Marca'])
             index = self.data.index(r, 1, QtCore.QModelIndex())
-            self.data.setData(index, row['nombre'])
+            self.data.setData(index, row['País de Origen'])
             index = self.data.index(r, 2, QtCore.QModelIndex())
-            self.data.setData(index, row['pais'])
+            self.data.setData(index, row['Cantidad de Modelos'])
 
         self.ui.tabla_marcas.setModel(self.data)
 
         # Para que las columnas 1 y 2 se estire o contraiga cuando
         # se cambia el tamaño de la pantalla
         self.ui.tabla_marcas.horizontalHeader().setResizeMode(
-            1, self.ui.tabla_marcas.horizontalHeader().Stretch)
+            0, self.ui.tabla_marcas.horizontalHeader().Stretch)
         self.ui.tabla_marcas.horizontalHeader().setResizeMode(
-            2, self.ui.tabla_marcas.horizontalHeader().Stretch)
+            1, self.ui.tabla_marcas.horizontalHeader().Stretch)
 
         self.ui.tabla_marcas.setColumnWidth(0, 100)
         self.ui.tabla_marcas.setColumnWidth(1, 210)
@@ -99,7 +101,7 @@ class Main(QtGui.QMainWindow):
         """
         Función obtiene el alumno seleccionado en la grilla
         para poner sus datos en el formulario para su edición
-        
+        """
         data = self.ui.tabla_marcas.model()
         index = self.ui.tabla_marcas.currentIndex()
         if index.row() == -1:  # No se ha seleccionado una fila
@@ -107,12 +109,11 @@ class Main(QtGui.QMainWindow):
             self.errorMessageDialog.showMessage(u"Debe seleccionar una fila")
             return False
         else:
-            rut = data.index(index.row(), 0, QtCore.QModelIndex()).data()
-            self.ui.form = FormAlumno(self, rut)
+            nom_marca = data.index(index.row(), 0, QtCore.QModelIndex()).data()
+            self.ui.form = FormMarca(self, nom_marca)
             self.ui.form.accepted.connect(self.load_data)
             self.ui.form.show()
-        """
-        pass
+        
 
 
 if __name__ == '__main__':

@@ -12,22 +12,12 @@ def conectar():
 
 
 def obtener_marcas():
-    """
-    Función que carga la información de marcas en una tabla,
-    incluyendo la cantidad de modelos asociados a la marca
-    """
     con = conectar()
     c = con.cursor()
-    query = """SELECT marca.nombre AS 'Nombre de Marca',
-    marca.pais AS 'País de Origen',COUNT(marca.id)AS 'Cantidad de Modelos'
-    FROM marca JOIN modelo
-    ON modelo.marca_id = marca.id
-    GROUP BY marca.id"""
+    query = "SELECT * FROM marca"
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()
-    for x in marcas:
-        print (x[0]," ",x[1]," ",x[2]," ")
     return marcas
 
 

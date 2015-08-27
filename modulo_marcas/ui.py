@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'admin_marcas.ui'
+# Dialog implementation generated from reading ui file 'admin_marcas.ui'
 #
 # Created: Tue Aug 25 13:47:26 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
