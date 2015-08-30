@@ -11,18 +11,7 @@ def conectar():
 con = conectar()
 cursor = con.cursor()
 
-def Buscar_Auto(model,marca,ano):
-	con=concetar()
-	c= con.cursor
-	try:
-		query="SELECT* FROM"
-
-def Buscar_Usuario(Usiario):
-	"debe retornar la contraseña para comparala en el Login."
-
-"""para la ventana Admin_modelos pide agregar, editar,y eliminar
-	 un modelo"""
-def agregar_modelo(id,marca,modelo,motor,peso,descripcion,rendimiento,imagen,fecha_creacion,preciolista):
+def agregar_modelo(marca,modelo,motor,peso,descripcion,rendimiento,imagen,fecha_creacion,preciolista):
 	"""debe agregar un modelo de auto a la base de datos"""
 	con = conectar()
 	c = con.cursor()
@@ -30,8 +19,8 @@ def agregar_modelo(id,marca,modelo,motor,peso,descripcion,rendimiento,imagen,fec
         query = """INSERT INTO modelo(id,marca_id,modelo,motor,
         	peso,descripcion,rendimiento,imagen,fecha_creacion,precio_lista)
             VALUES (?,?,?,?,?,?,?,?,?)"""
-        resultado = c.execute(query,[id,marca,modelo,motor,peso,descripcion,rendimiento,imagen,fecha_creacion,preciolista])
-        print "se agrego un producto"
+        resultado = c.execute(query,[marca,modelo,motor,peso,descripcion,rendimiento,imagen,fecha_creacion,preciolista])
+        print "se agrego un Modelo de autos "
     except sqlite3.Error as e:
         exito = False
         print "Error:", e.args[0]
@@ -39,6 +28,7 @@ def agregar_modelo(id,marca,modelo,motor,peso,descripcion,rendimiento,imagen,fec
     con.commit()
     con.close()
     return index
+    
  def eliminar_modelo(id_modelo):
  	"""elimina un modelo de la tabla de modelos 
  		LE PUSE ID PORQUE ERA LA PK PERO IGUAL PODRIA CAMBIARSE POR MODELO
@@ -73,16 +63,3 @@ def editar_modelo(marca,modelo,motor,peso,descripcion,rendimiento,imagen,fecha_c
     con.close()
     return True
 
-
-#MOSTRARA REGISTROS DE TABLAS
-cursor.execute('SELECT id, nombre, pais FROM marca')
-
-for i in cursor:
-    print("ID:"),i[0]
-    print("Nombre: "),i[1]
-    print("Pais: "),i[2],'\n'
-
-print("fin")
-
-con.close()
-###FIN MOSTRAR REGISTROS...
