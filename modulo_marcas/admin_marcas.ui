@@ -17,9 +17,9 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>253</x>
       <y>10</y>
-      <width>264</width>
+      <width>361</width>
       <height>41</height>
      </rect>
     </property>
@@ -27,7 +27,14 @@
      <item>
       <widget class="QPushButton" name="agregar_marca">
        <property name="text">
-        <string>Agregar/Editar Marca</string>
+        <string>Agregar  Marca</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="edtar_marca">
+       <property name="text">
+        <string>Editar Marca</string>
        </property>
       </widget>
      </item>

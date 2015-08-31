@@ -2,18 +2,18 @@
 
 # Form implementation generated from reading ui file 'form_marca.ui'
 #
-# Created: Thu Aug 27 04:07:30 2015
+# Created: Mon Aug 31 01:13:18 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(390, 216)
-        self.frame = QtGui.QFrame(Form)
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(390, 216)
+        self.frame = QtGui.QFrame(Dialog)
         self.frame.setGeometry(QtCore.QRect(40, 20, 301, 141))
         self.frame.setFrameShape(QtGui.QFrame.Box)
         self.frame.setFrameShadow(QtGui.QFrame.Sunken)
@@ -38,32 +38,23 @@ class Ui_Form(object):
         font.setBold(False)
         self.info_modo.setFont(font)
         self.info_modo.setObjectName("info_modo")
-        self.btn_ayuda = QtGui.QPushButton(self.frame)
-        self.btn_ayuda.setGeometry(QtCore.QRect(240, 120, 51, 20))
-        self.btn_ayuda.setObjectName("btn_ayuda")
-        self.btn_nuevo = QtGui.QPushButton(Form)
-        self.btn_nuevo.setGeometry(QtCore.QRect(50, 180, 91, 23))
-        self.btn_nuevo.setObjectName("btn_nuevo")
-        self.btn_editar = QtGui.QPushButton(Form)
-        self.btn_editar.setGeometry(QtCore.QRect(150, 180, 81, 23))
-        self.btn_editar.setObjectName("btn_editar")
-        self.btn_borrar = QtGui.QPushButton(Form)
-        self.btn_borrar.setGeometry(QtCore.QRect(240, 180, 91, 23))
-        self.btn_borrar.setObjectName("btn_borrar")
+        self.btn_guardar = QtGui.QPushButton(Dialog)
+        self.btn_guardar.setGeometry(QtCore.QRect(80, 180, 111, 23))
+        self.btn_guardar.setObjectName("btn_guardar")
+        self.cancelar = QtGui.QPushButton(Dialog)
+        self.cancelar.setGeometry(QtCore.QRect(210, 180, 75, 23))
+        self.cancelar.setObjectName("cancelar")
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        self.campo_pais.setStatusTip(QtGui.QApplication.translate("Form", "Modifique para agregar/editar el pais de origen", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("Form", "Pais de Origen", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Form", "Nombre de Marca", None, QtGui.QApplication.UnicodeUTF8))
-        self.campo_nombre.setToolTip(QtGui.QApplication.translate("Form", "Modifique para agregar/editar una nueva marca", None, QtGui.QApplication.UnicodeUTF8))
-        self.info_modo.setText(QtGui.QApplication.translate("Form", "Modo Edición de Marca", None, QtGui.QApplication.UnicodeUTF8))
-        self.btn_ayuda.setToolTip(QtGui.QApplication.translate("Form", "AYUDA!", None, QtGui.QApplication.UnicodeUTF8))
-        self.btn_ayuda.setText(QtGui.QApplication.translate("Form", "Ayuda", None, QtGui.QApplication.UnicodeUTF8))
-        self.btn_nuevo.setText(QtGui.QApplication.translate("Form", "Nueva Marca", None, QtGui.QApplication.UnicodeUTF8))
-        self.btn_editar.setText(QtGui.QApplication.translate("Form", "Editar Marca", None, QtGui.QApplication.UnicodeUTF8))
-        self.btn_borrar.setText(QtGui.QApplication.translate("Form", "Eliminar Marca", None, QtGui.QApplication.UnicodeUTF8))
+    def retranslateUi(self, Dialog):
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        self.campo_pais.setStatusTip(QtGui.QApplication.translate("Dialog", "Modifique para agregar/editar el pais de origen", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Pais de Origen", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "Nombre de Marca", None, QtGui.QApplication.UnicodeUTF8))
+        self.campo_nombre.setToolTip(QtGui.QApplication.translate("Dialog", "Modifique para agregar/editar una nueva marca", None, QtGui.QApplication.UnicodeUTF8))
+        self.info_modo.setText(QtGui.QApplication.translate("Dialog", "Modo Edición de Marca", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_guardar.setText(QtGui.QApplication.translate("Dialog", "Guardar Cambios", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancelar.setText(QtGui.QApplication.translate("Dialog", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
 

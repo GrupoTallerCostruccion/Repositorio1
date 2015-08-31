@@ -100,60 +100,31 @@
      <string>Modo Edición de Marca</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_ayuda">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>120</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>AYUDA!</string>
-    </property>
-    <property name="text">
-     <string>Ayuda</string>
-    </property>
-   </widget>
   </widget>
-  <widget class="QPushButton" name="btn_nuevo">
+  <widget class="QPushButton" name="btn_guardar">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>80</x>
      <y>180</y>
-     <width>91</width>
+     <width>111</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Nueva Marca</string>
+    <string>Guardar Cambios</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_editar">
+  <widget class="QPushButton" name="cancelar">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>210</x>
      <y>180</y>
-     <width>81</width>
+     <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Editar Marca</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_borrar">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>180</y>
-     <width>91</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Eliminar Marca</string>
+    <string>Cancelar</string>
    </property>
   </widget>
  </widget>
