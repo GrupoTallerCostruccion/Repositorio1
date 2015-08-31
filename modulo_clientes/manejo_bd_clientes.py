@@ -3,38 +3,52 @@
 
 import sqlite3
 import tkMessageBox as msje
-
+"manejo_bd para el modulo de clientes"
 
 def conectar():
     con = sqlite3.connect('Automotora.db')
     con.row_factory = sqlite3.Row
     return con
 
-
 def obtener_clientes():
-    """
-    retorna tabla con datos de cada cliente y suma de autos comprados
-    """
+    """devuelve tablaa de clientes"""
     con = conectar()
     c = con.cursor()
-    query = """SELECT cliente.rut,cliente.nombres,cliente.apellidos,
-    cliente.telefono,cliente.correo FROM cliente JOIN auto ON """
+    try:
+        query = """SELECT * FROM cliente"""
+        resultado = c.execute(query)
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    prod = resultado.fetchall()
+    con.close()
+    return prod
+
+"""
+def obtener_clientes():
+   
+    retorna tabla con datos de cada cliente y suma de autos comprados
+  
+    con = conectar()
+    c = con.cursor()
+    query = SELECT cliente.rut,cliente.nombres,cliente.apellidos,
+    cliente.telefono,cliente.correo FROM cliente JOIN auto ON 
+    
     resultado = c.execute(query)
     cliente = resultado.fetchall()
     con.close()
     return cliente
 
-"""
-def obtener_cliente(nombre):
+def obtener_cliente():
     con = conectar()
     c = con.cursor()
     query = "SELECT * FROM cliente WHERE nombre = ?"
-    resultado = c.execute(query, [cliente])
+    resultado = c.execute(query)
     clientes = resultado.fetchone()
     con.close()
     return clientes
-"""
 
+"""
 
 def crear_cliente(rut,nombres,apellidos,telefono,correo):
     con = conectar()

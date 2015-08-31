@@ -1,27 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+import sys
 from PySide import QtGui, QtCore
 from tabla_clientes import Ui_Form
-import manejo_bd
+import manejo_bd_clientes
 import form_registro
 
-class Display(QtGui.QMainWindow):
+class Main(QtGui.QMainWindow):
 
-    def __init__(self, parent=None):
-        QtGui.QMainWindow.__init__(self, parent)
+    def __init__(self,):
+        super(Main, self).__init__()
         self.ui =  Ui_Form()
         self.ui.setupUi(self)
+        
         self.iniciar_botones()
-        #self.cargar_datos()
         self.cargar_datos("")
+        self.show()
 
     def cargar_datos(self, text):
         """
         Función que se encarga de mostrar la tabla clientes,
         """
         
-        cliente= manejo_bd.obtener_clientes()
+        cliente= manejo_bd_clientes.obtener_clientes()
         self.model = QtGui.QStandardItemModel(len(cliente), 5)
         self.model.setHorizontalHeaderItem(0, QtGui.QStandardItem(u"Rut"))
         self.model.setHorizontalHeaderItem(1, QtGui.QStandardItem(u"Nombre"))
@@ -44,29 +45,29 @@ class Display(QtGui.QMainWindow):
             self.model.setData(index, row['correo'])
             index = self.model.index(r, 5, QtCore.QModelIndex())
             r=r+1
-        self.ui.tabla_clientes.setModel(self.model)
+        self.ui.tableView.setModel(self.model)
 
-        self.ui.tabla_clientes.setColumnWidth(0, 50)
-        self.ui.tabla_clientes.setColumnWidth(1, 65)
-        self.ui.tabla_clientes.setColumnWidth(2, 200)
-        self.ui.tabla_clientes.setColumnWidth(3, 150)
-        self.ui.tabla_clientes.setColumnWidth(4, 150)
-        self.ui.tabla_clientes.setColumnWidth(5, 100)
+        self.ui.tableView.setColumnWidth(0, 50)
+        self.ui.tableView.setColumnWidth(1, 65)
+        self.ui.tableView.setColumnWidth(2, 200)
+        self.ui.tableView.setColumnWidth(3, 150)
+        self.ui.tableView.setColumnWidth(4, 150)
+        self.ui.tableView.setColumnWidth(5, 100)
 
 
     def eliminar_cliente(self):
         """
         Función que elimina un cliente de la tabla
         """
-        model = self.ui.tabla_clientes.model()
-        index = self.ui.tabla_clientes.currentIndex()
+        model = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
         if index.row() == -1:
             self.errorMessageDialog = QtGui.QErrorMessage(self)
             self.errorMessageDialog.showMessage("Debe seleccionar una fila")
             return False
         else:
             rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
-            if (manejo_bd.eliminar_cliente(rut)):
+            if (manejo_bd_clientes.eliminar_cliente(rut)):
               
                 self.cargar_datos("")
                 return True
@@ -82,8 +83,8 @@ class Display(QtGui.QMainWindow):
         vez presionado el botón, se abrirá el formulario cargado con los datos
         del cliente
         """
-        model = self.ui.tabla_clientes.model()
-        index = self.ui.tabla_clientes.currentIndex()
+        model = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
         if index.row() == -1: #No se ha seleccionado una fila
             self.errorMessageDialog = QtGui.QErrorMessage(self)
             self.errorMessageDialog.showMessage("Debe seleccionar una fila")
@@ -114,3 +115,9 @@ class Display(QtGui.QMainWindow):
         #self.ui.cbx_marcas.activated[int].connect(self.cargar_datos)
         #self.ui.txt_producto.textChanged[str].connect(self.cargar_datos)
         self.ui.pushButton_3.clicked.connect(self.agregar_cliente)
+
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    main = Main()
+    sys.exit(app.exec_())
+
