@@ -26,13 +26,13 @@ def obtener_marcas():
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()
+    return marcas
 
-
-def obtener_marca_nombre(nombre):
+def obtener_marca(nombre):
     con = conectar()
     c = con.cursor()
     query = "SELECT * FROM marca WHERE nombre = ?"
-    resultado = c.execute(query, [marca])
+    resultado = c.execute(query, [nombre])
     marcas = resultado.fetchone()
     con.close()
     return marcas
@@ -46,17 +46,27 @@ def obtener_marca_pais(pais):
     con.close()
     return marcas
 
+def editar_marca(marca_inicial,marca_editada,pais):
+    con = conectar()
+    c = con.cursor()
+    #query = "UPDATE marca SET nombre = ",marca_inicial,
+    #" , pais = ",pais," WHERE nombre = ",marca_inicial
+    query = (
+        "UPDATE marca SET nombre = ? ,pais = ? "
+        "WHERE nombre = ? ")
+    c.execute(query, (marca_editada,pais,marca_inicial))
+    con.commit()
 
+    
 def crear_marca(marca,pais):
     con = conectar()
     c = con.cursor()
     sql = (
-        "INSERT INTO marca (marca,pais)"
+        "INSERT INTO marca (id,nombre,pais) "
         "VALUES (?, ?)")
-    c.execute(sql, (rut, nombres, apellidos, correo))
+    c.execute(sql, (marca,pais))
     con.commit()
-    msje.showinfo(title="Crear Marca", message="Marca registrada en la bd!")
-
+    
 
 def borrar(nombre_marca):
     exito = False

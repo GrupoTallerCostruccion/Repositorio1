@@ -1,66 +1,72 @@
 ﻿from PySide import QtGui
-from form_marca import Ui_Form
-import model_marca
+from form_marca import Ui_Dialog
+import model_marca as model
 
 class FormMarca(QtGui.QDialog):
 
-    def __init__(self, parent=None, rut=None):
+    def __init__(self, parent=None, nombre=None):
         """
         Formulario para crear y editar alumnos.
         Si se recibe la var rut
         entonces se está en modo de edición.
         """
         super(FormMarca, self).__init__(parent)
-        self.ui = Ui_Form()
+        self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        """
-        if rut is None:
-            self.ui.save.clicked.connect(self.crear_alumno)
+        
+        if nombre is None:
+            self.ui.btn_guardar.clicked.connect(self.crear_marca)
+            self.ui.info_modo.setText(u"Modo creación de Marca")
         else:
-            self.colocar_datos(rut)
-            self.ui.save.clicked.connect(self.editar_alumno)
-        """
+            self.colocar_datos(nombre)
+            self.ui.btn_guardar.clicked.connect(self.editar_marca)
+            self.ui.info_modo.setText(u"Modo Edición de Marca")
+        
 
-    def colocar_datos(self, rut):
+    def colocar_datos(self, nombre):
         """
-        Coloca los datos del alumno en los widgets
+        Coloca los datos de la marca en los widgets
         para su edición
         """
-        alumno = model.alumno(rut)
-        self.ui.rut.setText(alumno["rut"])
-        self.ui.names.setText(alumno["nombres"])
-        self.ui.lastnames.setText(alumno["apellidos"])
-        self.ui.email.setText(alumno["correo"])
+        marca = model.obtener_marca(nombre)
+        self.ui.campo_nombre.setText(marca["Nombre de Marca"])
+        self.ui.campo_pais.setText(marca[u"País de Origen"])
 
     def obtener_datos(self):
         """
         Obtiene los datos colocados por el usuario
         en el formulario
         """
-        rut = self.ui.rut.text()
-        nombres = self.ui.names.text()
-        apellidos = self.ui.lastnames.text()
-        correo = self.ui.email.text()
-        return (rut, nombres, apellidos, correo)
+        nombre = self.ui.campo_nombre.text()
+        pais = self.ui.campo_pais.text()
+        return (nombre,pais)
 
-    def crear_alumno(self):
-        rut, nombres, apellidos, correo = self.obtener_datos()
+    def crear_marca(self):
+        nombre,pais = self.obtener_datos()
         try:
-            model_marca.crear_alumno(rut, nombres, apellidos, correo)
+            model.crear_marca(nombre,pais)
             self.accepted.emit()
-            msgBox = QtGui.QMessageBox()
-            msgBox.setText(u"El alumno ha sido creado.")
-            msgBox.exec_()
+            self.alerta("Marca Creada")
             self.close()
-        except:
-            #Tratar errores!!!!!!
-            pass
+        except Exception,e:
+            print (e)
+            self.alerta("ERROR, marca no pudo ser guardada!")
+            self.close()
 
-    def editar_alumno(self):
-        rut, nombres, apellidos, correo = self.obtener_datos()
+    def alerta(self, msje):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setText(msje)
+        msgBox.exec_()
+            
+    def editar_marca(self):
+        nombre,pais = self.obtener_datos()
         try:
-            # Invocar la función del modelo que permite editar
-            print "Editar"
-        except:
-            #Tratar errores!!!!!!
+            model.editar_marca(nombre, pais)
+            self.accepted.emit()
+            self.alerta("Marca Editada.")
+            self.close()
+        except Exception,e:
+            print (e)
+            self.alerta("ERROR, marca no pudo ser editada!")
+            self.close()
             pass
