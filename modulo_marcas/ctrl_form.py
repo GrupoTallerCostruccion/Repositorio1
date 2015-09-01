@@ -13,7 +13,7 @@ class FormMarca(QtGui.QDialog):
         super(FormMarca, self).__init__(parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        
+        self.nom_orig = nombre
         if nombre is None:
             self.ui.btn_guardar.clicked.connect(self.crear_marca)
             self.ui.info_modo.setText(u"Modo creación de Marca")
@@ -29,8 +29,8 @@ class FormMarca(QtGui.QDialog):
         para su edición
         """
         marca = model.obtener_marca(nombre)
-        self.ui.campo_nombre.setText(marca["Nombre de Marca"])
-        self.ui.campo_pais.setText(marca[u"País de Origen"])
+        self.ui.campo_nombre.setText(marca["nombre"])
+        self.ui.campo_pais.setText(marca["pais"])
 
     def obtener_datos(self):
         """
@@ -54,14 +54,21 @@ class FormMarca(QtGui.QDialog):
             self.close()
 
     def alerta(self, msje):
+        """
+        Genera un diálogo informativo. (ventana pop-up)
+        """
         msgBox = QtGui.QMessageBox()
         msgBox.setText(msje)
         msgBox.exec_()
             
     def editar_marca(self):
+        """
+        Extrae datos ingresados en el formulario.
+        Edita la marca seleccionada
+        """
         nombre,pais = self.obtener_datos()
         try:
-            model.editar_marca(nombre, pais)
+            model.editar_marca(self.nom_orig, nombre, pais)
             self.accepted.emit()
             self.alerta("Marca Editada.")
             self.close()

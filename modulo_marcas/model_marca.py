@@ -6,7 +6,7 @@ import tkMessageBox as msje
 
 
 def conectar():
-    con = sqlite3.connect('Automotora.db')
+    con = sqlite3.connect('../Automotora.db')
     con.row_factory = sqlite3.Row
     return con
 
@@ -18,11 +18,12 @@ def obtener_marcas():
     """
     con = conectar()
     c = con.cursor()
-    query = """SELECT marca.nombre AS 'Nombre de Marca',
-    marca.pais AS 'País de Origen',COUNT(marca.id)AS 'Cantidad de Modelos'
-    FROM marca JOIN modelo
-    ON modelo.marca_id = marca.id
-    GROUP BY marca.id"""
+    query = """SELECT marca.nombre AS 'Nombre de Marca', 
+    marca.pais AS 'País de Origen',COUNT(marca.id)   
+    AS 'Cantidad de Modelos'   
+    FROM marca JOIN modelo 
+    ON modelo.marca_id = marca.id 
+    GROUP BY marca.id """
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()
@@ -46,7 +47,7 @@ def obtener_marca_pais(pais):
     con.close()
     return marcas
 
-def editar_marca(marca_inicial,marca_editada,pais):
+def editar_marca(marca_orig,marca_editada,pais):
     con = conectar()
     c = con.cursor()
     #query = "UPDATE marca SET nombre = ",marca_inicial,
@@ -54,7 +55,7 @@ def editar_marca(marca_inicial,marca_editada,pais):
     query = (
         "UPDATE marca SET nombre = ? ,pais = ? "
         "WHERE nombre = ? ")
-    c.execute(query, (marca_editada,pais,marca_inicial))
+    c.execute(query, (marca_editada,pais,marca_orig))
     con.commit()
 
     
@@ -62,7 +63,7 @@ def crear_marca(marca,pais):
     con = conectar()
     c = con.cursor()
     sql = (
-        "INSERT INTO marca (id,nombre,pais) "
+        "INSERT INTO marca (nombre,pais) "
         "VALUES (?, ?)")
     c.execute(sql, (marca,pais))
     con.commit()

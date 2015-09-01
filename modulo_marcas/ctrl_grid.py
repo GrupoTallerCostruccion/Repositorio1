@@ -4,12 +4,11 @@ import sys
 from PySide import QtGui, QtCore
 from ui import Ui_MainWindow
 import model_marca as db_marcas
-from ctrl_form import FormMarca
 
 
 class Main(QtGui.QMainWindow):
     """
-    Lanza la grilla principa
+    Esta es una grilla
     """
     def __init__(self):
         super(Main, self).__init__()
@@ -21,16 +20,19 @@ class Main(QtGui.QMainWindow):
         self.show()
 
     def connect_signals(self):
-        self.ui.agregar_marca.clicked.connect(self.agregar)
-        self.ui.edtar_marca.clicked.connect(self.edit)
-        self.ui.eliminar_marca.clicked.connect(self.delete)
+        self.ui.agregar_marca.clicked.connect(self.add)
+        #self.ui.eliminar_marca.connect(self.delete)
+
+    def add(self):
+        self.ui.form = FormAlumno(self)
+        self.ui.form.accepted.connect(self.load_data)
+        self.ui.form.show()
 
     def load_data(self):
         """
         Función que carga la información de marcas en la grilla
         incluyendo la cantidad de modelos asociados a la marca
         """
-        print "load data.."
         marcas = db_marcas.obtener_marcas()
         #Creamos el modelo asociado a la tabla
         self.data = QtGui.QStandardItemModel(len(marcas)+1, 3)
@@ -64,9 +66,12 @@ class Main(QtGui.QMainWindow):
 
     def delete(self):
         """
-        Función que borra un alumno de la base de datos e
+        Función que intenta borrar un alumno de la base de datos e
         indica el resultado de la operación
         """
+
+        # ANTES DE REALIZAR LA ACCIÓN SE DEBERÍA PREGUNTAR
+        # AL USUARIO CONFIRMAR LA OPERACIÓN !!!!!!!!!!!!!!
         data = self.ui.tabla_marcas.model()
         index = self.ui.tabla_marcas.currentIndex()
         if index.row() == -1:  # No se ha seleccionado una fila
@@ -74,13 +79,8 @@ class Main(QtGui.QMainWindow):
             self.errorMessageDialog.showMessage(u"Debe seleccionar una fila")
             return False
         else:
-            self.resp = QtGui.QMessageBox.question(
-                self,"Borrar",
-                "Deseas borrar esta marca?",
-                QtGui.QMessageBox.Yes,
-                QtGui.QMessageBox.No);
-            
-            if self.resp == QtGui.QMessageBox.Yes:
+            if tkMessageBox.askyesno(
+                "Borrar Marca", "Deseas borrar esta marca?"):
                 marca = data.index(
                     index.row(), 0, QtCore.QModelIndex()).data()
                 if (db_marcas.borrar(marca)):
@@ -94,23 +94,13 @@ class Main(QtGui.QMainWindow):
                     self.ui.errorMessageDialog.showMessage(
                         u"Error al eliminar el registro")
                     return False
-                self.load_data()
 
-    def agregar(self):
-        """
-        Agrega/edita una marca. Llama al formulario correspondiente
-        """
-        self.ui.form = FormMarca(self) ##
-        self.ui.form.accepted.connect(self.load_data)
-        #self.ui.form.rejected.connect(self.load_data)
-        self.ui.form.show()
-
-        
+    ########### rehacer..
     def edit(self):
         """
         Función obtiene el alumno seleccionado en la grilla
         para poner sus datos en el formulario para su edición
-        """
+        
         data = self.ui.tabla_marcas.model()
         index = self.ui.tabla_marcas.currentIndex()
         if index.row() == -1:  # No se ha seleccionado una fila
@@ -118,11 +108,12 @@ class Main(QtGui.QMainWindow):
             self.errorMessageDialog.showMessage(u"Debe seleccionar una fila")
             return False
         else:
-            nom_marca = data.index(index.row(), 0, QtCore.QModelIndex()).data()
-            self.ui.form = FormMarca(self, nom_marca)
+            rut = data.index(index.row(), 0, QtCore.QModelIndex()).data()
+            self.ui.form = FormAlumno(self, rut)
             self.ui.form.accepted.connect(self.load_data)
             self.ui.form.show()
-        
+        """
+        pass
 
 
 if __name__ == '__main__':
