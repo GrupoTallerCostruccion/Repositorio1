@@ -12,8 +12,8 @@ class Main(QtGui.QMainWindow):
     """
     Esta es una grilla
     """
-    def __init__(self):
-        super(Main, self).__init__()
+    def __init__(self,parent):
+        super(Main, self).__init__(parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 

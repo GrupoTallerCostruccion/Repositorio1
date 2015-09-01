@@ -6,7 +6,7 @@ from ui_main import Ui_MainWindow as Ui_Main
 from modulo_clientes.controlador_modulo_cliente import Main as Mod1
 from modulo_marcas.vista_marca import Main as Mod2
 from modulo_modelos.vista_modelo import Main as Mod3
-from login.vista_login import Main as Mod4
+from login.contr_login import Main as Mod4
 
 class Main(QtGui.QMainWindow):
     """
@@ -19,6 +19,7 @@ class Main(QtGui.QMainWindow):
         # Cargamos las acciones al presionar el menú
         self.menu_actions()
         self.show()
+        self.activar()
 
     def menu_actions(self):
         self.ui.actionModulo_Clientes.triggered.connect(self.load_mod1)

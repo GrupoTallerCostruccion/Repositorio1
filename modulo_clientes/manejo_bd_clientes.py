@@ -6,7 +6,7 @@ import tkMessageBox as msje
 "manejo_bd para el modulo de clientes"
 
 def conectar():
-    con = sqlite3.connect('Automotora.db')
+    con = sqlite3.connect('../Automotora.db')
     con.row_factory = sqlite3.Row
     return con
 

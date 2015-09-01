@@ -11,8 +11,8 @@ class Main(QtGui.QMainWindow):
     """
     Lanza la grilla principa
     """
-    def __init__(self):
-        super(Main, self).__init__()
+    def __init__(self,parent=None):
+        super(Main, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 

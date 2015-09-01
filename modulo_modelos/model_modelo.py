@@ -4,7 +4,7 @@ import sqlite3
 
 def conectar():
     """conecta base de datos"""
-    con = sqlite3.connect('Automotora.db')
+    con = sqlite3.connect('../Automotora.db')
     con.row_factory = sqlite3.Row
     return con
 

@@ -8,8 +8,8 @@ import form_registro
 
 class Main(QtGui.QMainWindow):
 
-    def __init__(self,):
-        super(Main, self).__init__()
+    def __init__(self,parent=None):
+        super(Main, self).__init__(parent)
         self.ui =  Ui_Form()
         self.ui.setupUi(self)
         
