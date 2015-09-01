@@ -4,6 +4,8 @@ import sys
 from PySide import QtGui, QtCore
 from tabla_clientes import Ui_Form
 import manejo_bd_clientes
+import controlador_form_compra
+import controlador_formulario_registro
 import form_registro
 
 class Main(QtGui.QMainWindow):
@@ -86,25 +88,18 @@ class Main(QtGui.QMainWindow):
         model = self.ui.tableView.model()
         index = self.ui.tableView.currentIndex()
         if index.row() == -1: #No se ha seleccionado una fila
-            self.errorMessageDialog = QtGui.QErrorMessage(self)
-            self.errorMessageDialog.showMessage("Debe seleccionar una fila")
-            return False
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = controlador_formulario_registro.Display(self)
+            formulario.exec_()
+            self.cargar_datos("")
         else:
-            Rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
-            formulario = form_cliente.Display(self)
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = controlador_formulario_registro.Display(self)
             formulario.editar(rut)
             formulario.exec_()
             self.cargar_datos("")
-
-    def agregar_cliente(self):
-        """
-        Función que permite agregar un producto a la tabla de productos. Al
-        presionar el botón, se desplegará un formulario para indroducir la
-        información del nuevo producto.
-        """
-        formulario = form_registro.Display(self)
-        formulario.exec_()
-        self.cargar_datos("")
 
     def iniciar_botones(self):
         """
@@ -112,12 +107,35 @@ class Main(QtGui.QMainWindow):
         """
         self.ui.pushButton_2.clicked.connect(self.eliminar_cliente)
         self.ui.pushButton_3.clicked.connect(self.editar_cliente)
-        #self.ui.cbx_marcas.activated[int].connect(self.cargar_datos)
-        #self.ui.txt_producto.textChanged[str].connect(self.cargar_datos)
-        self.ui.pushButton_3.clicked.connect(self.agregar_cliente)
+        self.ui.pushButton.clicked.connect(self.realizar_compra)
+
+
+    def realizar_compra(self):
+        model = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
+        if index.row() == -1: #No se ha seleccionado una fila
+            self.errorMessageDialog = QtGui.QErrorMessage(self)
+            self.errorMessageDialog.showMessage("Debe seleccionar una fila")
+            return False
+        else:
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = controlador_form_compra.Display(self)
+            formulario.rellenar(rut)
+            formulario.exec_()
+            self.cargar_datos("")
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     main = Main()
     sys.exit(app.exec_())
+
+
+
+
+
+
+
+
 

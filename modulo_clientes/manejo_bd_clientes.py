@@ -3,12 +3,65 @@
 
 import sqlite3
 import tkMessageBox as msje
+from array import *
 "manejo_bd para el modulo de clientes"
 
 def conectar():
     con = sqlite3.connect('Automotora.db')
     con.row_factory = sqlite3.Row
     return con
+
+def datos_clientes(rut):
+    """Obtiene la fila  "rut" en la tabla de clientes."""
+    con = conectar()
+    c = con.cursor()
+    try:
+        query = """SELECT * FROM cliente WHERE rut=?"""
+        resultado = c.execute(query,[rut])
+        print query
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    prod = resultado.fetchall()
+    con.close()
+    return prod
+
+def agregar_cliente(rut,nombre,apellido,telefono,correo):
+    print rut
+    print nombre
+    """Agrega una fila en la tabla clientes con los valores entregados."""
+    con = conectar()
+    c = con.cursor()
+    try:
+        query = """INSERT INTO cliente(rut,
+            nombres,apellidos,telefono,correo) VALUES (?,?,?,?,?)"""
+        resultado = c.execute(query,[rut,nombre,apellido,telefono,correo])
+        print "se agrego un producto"
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    index = c.fetchone()
+    con.commit()
+    con.close()
+    return index
+
+
+
+def editar_cliente(nombre,apellido,telefono,correo,rut):
+    """Edita una fila en la tabla productos con los valores entregados."""
+    con = conectar()
+    c = con.cursor()
+    try:
+        query = """UPDATE cliente SET  nombres = ?, apellidos = ?,
+            telefono = ?, correo = ?,  WHERE rut = ?"""
+        resultado = c.execute(query,[nombre,apellido,telefono,correo,rut])
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    index = c.fetchone()
+    con.commit()
+    con.close()
+    return True
 
 def obtener_clientes():
     """devuelve tablaa de clientes"""
@@ -23,6 +76,21 @@ def obtener_clientes():
     prod = resultado.fetchall()
     con.close()
     return prod
+
+def obtener_autos():
+    """devuelve tablaa de autos"""
+    con = conectar()
+    c = con.cursor()
+    try:
+        query = """SELECT * FROM auto"""
+        resultado = c.execute(query)
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    prod = resultado.fetchall()
+    con.close()
+    return prod
+
 
 """
 def obtener_clientes():
@@ -56,11 +124,11 @@ def crear_cliente(rut,nombres,apellidos,telefono,correo):
     sql = (
         "INSERT INTO cliente (rut,nombres,apellidos,telefono,correo)"
         "VALUES (?,?,?,?,?)")
-    c.execute(sql, (rut, nombres, apellidos, correo))
+    c.execute(sql, (rut, nombres, apellidos, telefono, correo))
     con.commit()
     msje.showinfo(title="Crear cliente", message="cliente registrada en la bd!")
 
-def borrar(rut):
+def eliminar_cliente(rut):
     exito = False
     con = conectar()
     c = con.cursor()
