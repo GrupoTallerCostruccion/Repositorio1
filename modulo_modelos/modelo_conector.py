@@ -6,19 +6,19 @@ import tkMessageBox as msje
 
 
 def conectar():
-    con = sqlite3.connect('Automotora.db')
+    con = sqlite3.connect('../Automotora.db')
     con.row_factory = sqlite3.Row
-    c = con.cursor()
-    return c
+    return con
 
 def obtener_query(consulta_sql):
     """
     Genera la tabla deseada ingresando la consulta
     """
-    c = conectar()
+    con = conectar()
+    c = con.cursor()
     resultado = c.execute(consulta_sql)
     tabla = resultado.fetchall()
-    c.close()
+    con.close()
     return tabla
 
 def borrar_elemento(tabla, nombre_columna, parametro):
@@ -28,10 +28,11 @@ def borrar_elemento(tabla, nombre_columna, parametro):
     """
     exito = False
     cursor = conectar()
-    query = "DELETE FROM ", tabla," WHERE ",nombre_columna," = ?"
+    query = "DELETE FROM {} WHERE {} = '{}'".format(
+        tabla,nombre_columna,parametro)
     print (query)
     try:
-        resultado = c.execute(query, [parametro])
+        resultado = cursor.execute(query)
         cursor.commit()
         exito = True
     except sqlite3.Error as e:
@@ -51,18 +52,47 @@ def obtener_marcas():
     return obtener_query(query)
 
 def obtener_clientes():
-    query = """SELECT *, COUNT(cliente.rut)  AS "Autos Comprados" FROM cliente
+    query = """SELECT *, COUNT(cliente.rut)  AS"Autos Comprados"
+    FROM cliente
     JOIN auto ON auto.cliente_rut = cliente.rut
     GROUP BY cliente.rut"""
     return obtener_query(query)
 
 def obtener_modelos():
-    query="""SELECT *, COUNT(*) AS "Ventas" FROM modelo
-    JOIN auto ON  auto.modelo_id = modelo.id
+    query="""SELECT modelo, marca.nombre AS Marca, motor, peso, rendimiendo, 
+    COUNT(modelo.id) AS "Ventas",  
+    fecha_creacion AS Fecha, descripcion, precio_lista
+    FROM modelo, auto, marca
+    WHERE auto.modelo_id = modelo.id AND
+    modelo.marca_id = marca.id
     GROUP BY modelo.id"""
     return obtener_query(query)
 
 #####################################
+
+def buscar_modelos(parametro):
+    """
+    Retorna tabla con los resultados de busqueda de
+    marcas de modelos. Parametro ingresado desde el lineedit de busqueda
+    """
+
+    query="""SELECT modelo, marca.nombre AS Marca, motor, peso,
+    rendimiendo, COUNT(modelo.id) AS "Ventas",  
+    fecha_creacion AS Fecha, descripcion, precio_lista
+    FROM modelo, auto, marca
+    
+    WHERE auto.modelo_id = modelo.id AND
+    modelo.marca_id = marca.id AND
+    
+    Marca LIKE '%{}%' OR modelo LIKE '%{}%'
+    OR motor LIKE '%{}%' or peso LIKE '%{}%'
+    or Fecha LIKE '%{}%' or precio_lista LIKE '%{}%'
+    or descripcion LIKE '%{}%' or rendimiendo LIKE '%{}%'
+    GROUP BY modelo.id""".format(
+        parametro,parametro,parametro,parametro,parametro,parametro,
+        parametro,parametro)
+    return obtener_query(query)    
+
 def obtener_marca_nombre(nombre):
     c = conectar()
     query = "SELECT * FROM marca WHERE nombre = ?"

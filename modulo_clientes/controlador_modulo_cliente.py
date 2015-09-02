@@ -4,6 +4,8 @@ import sys
 from PySide import QtGui, QtCore
 from tabla_clientes import Ui_Form
 import manejo_bd_clientes
+import controlador_form_compra
+from controlador_formulario_registro import Display
 import form_registro
 
 class Main(QtGui.QMainWindow):
@@ -29,21 +31,23 @@ class Main(QtGui.QMainWindow):
         self.model.setHorizontalHeaderItem(2, QtGui.QStandardItem(u"Apellido"))
         self.model.setHorizontalHeaderItem(3, QtGui.QStandardItem(u"Telefono"))
         self.model.setHorizontalHeaderItem(4, QtGui.QStandardItem(u"Correo"))
-        self.model.setHorizontalHeaderItem(5, QtGui.QStandardItem(u"ID"))
+        self.model.setHorizontalHeaderItem(5, QtGui.QStandardItem(
+            u"Autos Comprados"))
    
         r = 0
         for row in cliente:
             index = self.model.index(r, 0, QtCore.QModelIndex())
             self.model.setData(index, row['rut'])
             index = self.model.index(r, 1, QtCore.QModelIndex())
-            self.model.setData(index, row['nombres'])
+            self.model.setData(index, row['nombre'])
             index = self.model.index(r, 2, QtCore.QModelIndex())
-            self.model.setData(index, row['apellidos'])
+            self.model.setData(index, row['apellido'])
             index = self.model.index(r, 3, QtCore.QModelIndex())
             self.model.setData(index, row['telefono'])
             index = self.model.index(r, 4, QtCore.QModelIndex())
             self.model.setData(index, row['correo'])
             index = self.model.index(r, 5, QtCore.QModelIndex())
+            self.model.setData(index, row['Autos Comprados'])
             r=r+1
         self.ui.tableView.setModel(self.model)
 
@@ -66,15 +70,22 @@ class Main(QtGui.QMainWindow):
             self.errorMessageDialog.showMessage("Debe seleccionar una fila")
             return False
         else:
-            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
-            if (manejo_bd_clientes.eliminar_cliente(rut)):
-              
-                self.cargar_datos("")
-                return True
-            else:
-                self.ui.errorMessageDialog = QtGui.QErrorMessage(self)
-                self.ui.errorMessageDialog.showMessage("Error al eliminar el cliente")
-                return False
+            self.resp = QtGui.QMessageBox.question(
+                self,"Borrar",
+                "Seguro deseas borrar este Cliente?",
+                QtGui.QMessageBox.Yes,
+                QtGui.QMessageBox.No);
+            
+            if self.resp == QtGui.QMessageBox.Yes:
+                rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+                if (manejo_bd_clientes.eliminar_cliente(rut)):
+                  
+                    self.cargar_datos("")
+                    return True
+                else:
+                    self.ui.errorMessageDialog = QtGui.QErrorMessage(self)
+                    self.ui.errorMessageDialog.showMessage("Error al eliminar el cliente")
+                    return False
 
     def editar_cliente(self):
         """
@@ -86,38 +97,61 @@ class Main(QtGui.QMainWindow):
         model = self.ui.tableView.model()
         index = self.ui.tableView.currentIndex()
         if index.row() == -1: #No se ha seleccionado una fila
-            self.errorMessageDialog = QtGui.QErrorMessage(self)
-            self.errorMessageDialog.showMessage("Debe seleccionar una fila")
-            return False
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = controlador_formulario_registro.Display(self)
+            formulario.exec_()
+            self.cargar_datos("")
         else:
-            Rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
-            formulario = form_cliente.Display(self)
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = Display(self)
             formulario.editar(rut)
             formulario.exec_()
             self.cargar_datos("")
-
-    def agregar_cliente(self):
-        """
-        Función que permite agregar un producto a la tabla de productos. Al
-        presionar el botón, se desplegará un formulario para indroducir la
-        información del nuevo producto.
-        """
-        formulario = form_registro.Display(self)
-        formulario.exec_()
-        self.cargar_datos("")
 
     def iniciar_botones(self):
         """
         Función que se encarga de cargar todas las señales de los objetos.
         """
-        self.ui.pushButton_2.clicked.connect(self.eliminar_cliente)
-        self.ui.pushButton_3.clicked.connect(self.editar_cliente)
-        #self.ui.cbx_marcas.activated[int].connect(self.cargar_datos)
-        #self.ui.txt_producto.textChanged[str].connect(self.cargar_datos)
-        self.ui.pushButton_3.clicked.connect(self.agregar_cliente)
+        self.ui.btn_eliminar.clicked.connect(self.eliminar_cliente)
+        self.ui.btn_editar.clicked.connect(self.editar_cliente)
+        self.ui.btn_agregar.clicked.connect(self.agregar_cliente)
+        self.ui.btn_compra.clicked.connect(self.realizar_compra)
+
+
+    def agregar_cliente(self):
+        formulario = Display(self)
+        formulario.exec_()
+        self.cargar_datos("")
+
+        
+    def realizar_compra(self):
+        model = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
+        if index.row() == -1: #No se ha seleccionado una fila
+            self.errorMessageDialog = QtGui.QErrorMessage(self)
+            self.errorMessageDialog.showMessage("Debe seleccionar una fila")
+            return False
+        else:
+            rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+            print rut
+            formulario = controlador_form_compra.Display(self)
+            formulario.rellenar(rut)
+            formulario.exec_()
+            self.cargar_datos("")
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     main = Main()
     sys.exit(app.exec_())
+
+
+
+
+
+
+
+
 

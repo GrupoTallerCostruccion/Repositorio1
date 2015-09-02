@@ -22,6 +22,12 @@
      <height>261</height>
     </rect>
    </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -39,9 +45,9 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>112</x>
      <y>310</y>
-     <width>303</width>
+     <width>431</width>
      <height>43</height>
     </rect>
    </property>
@@ -53,21 +59,28 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="btn_agregar">
       <property name="text">
-       <string>Agregar/Editar Cliente</string>
+       <string>Agregar Cliente</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="btn_editar">
+      <property name="text">
+       <string>Editar Cliente</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_eliminar">
       <property name="text">
        <string>Eliminar Cliente</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="btn_compra">
       <property name="toolTip">
        <string>Seleccione cliente en la tabla para efectuar compra de un auto</string>
       </property>

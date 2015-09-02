@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 import sys
 from PySide import QtGui, QtCore
-from tabla_modelos import Ui_Form
+from tabla_modelos import Ui_Dialog
 import modelo_conector as db
-#from python -m Repositorio1 import modelo_conector as db
-#from ctrl_form import FormModelos
+from ctrl_form import FormModelo
 
 
 class Main(QtGui.QMainWindow):
     """
     Esta es una grilla
     """
-    def __init__(self,parent):
+    def __init__(self,parent=None):
         super(Main, self).__init__(parent)
-        self.ui = Ui_Form()
+        self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
         self.load_data()
@@ -23,80 +22,81 @@ class Main(QtGui.QMainWindow):
 
     def connect_signals(self):
         self.ui.btn_agregar.clicked.connect(self.add)
-        #self.ui.btn_borrar.connect(self.delete)
-        #self.ui.buscar.connect(self.filtrar_modelos)
+        self.ui.btn_editar.clicked.connect(self.editar)
+        self.ui.btn_borrar.clicked.connect(self.delete)
+        self.ui.buscar.textChanged[str].connect(self.filtrar_modelos)
 
     def add(self):
-        #self.ui.form = FormMarca(self)
-        #self.ui.form.accepted.connect(self.load_data)
-        #self.ui.form.show()
-        pass
-    def filtrar_modelos(self):
+        self.ui.form = FormModelo(self)
+        self.ui.form.accepted.connect(self.load_data)
+        self.ui.form.show()
         pass
 
-    def load_data(self):
+    def filtrar_modelos(self,busqueda):
+        """
+        Filtra la busqueda de modelos ingresado en el lineEdit
+        """
+        mod = db.buscar_modelos(busqueda)
+        self.load_data(mod)
+        
+
+    def load_data(self, modelos= None):
         """
         Función que carga la información de modelos en la grilla
         incluyendo la cantidad de modelos asociados a la marca
         """
-        modelos = db.obtener_modelos()
+        if (modelos == None):
+            modelos = db.obtener_modelos()
         #Creamos el modelo asociado a la tabla
         self.data = QtGui.QStandardItemModel(len(modelos)+1, 10)
         self.data.setHorizontalHeaderItem(
-            0, QtGui.QStandardItem(u"marca_id"))
+            0, QtGui.QStandardItem(u"modelo"))
         self.data.setHorizontalHeaderItem(
-            1, QtGui.QStandardItem(u"Modelo"))
+            1, QtGui.QStandardItem(u"Marca"))
         self.data.setHorizontalHeaderItem(
-            2, QtGui.QStandardItem(u"Motor"))
+            2, QtGui.QStandardItem(u"motor"))
         self.data.setHorizontalHeaderItem(
-            3, QtGui.QStandardItem(u"Peso"))
+            3, QtGui.QStandardItem(u"peso"))
         self.data.setHorizontalHeaderItem(
-            4, QtGui.QStandardItem(u"Descripcion"))
+            4, QtGui.QStandardItem(u"rendimiendo"))
         self.data.setHorizontalHeaderItem(
-            5, QtGui.QStandardItem(u"Rendimiento"))
+            5, QtGui.QStandardItem(u"Ventas"))
         self.data.setHorizontalHeaderItem(
-            6, QtGui.QStandardItem(u"Imagen"))
+            6, QtGui.QStandardItem(u"fecha_creacion"))
         self.data.setHorizontalHeaderItem(
-            7, QtGui.QStandardItem(u"Fecha"))
+            7, QtGui.QStandardItem(u"descripcion"))
         self.data.setHorizontalHeaderItem(
-            8, QtGui.QStandardItem(u"Precio"))
-        self.data.setHorizontalHeaderItem(
-            9, QtGui.QStandardItem(u"Ventas"))
+            8, QtGui.QStandardItem(u"precio_lista"))
 
         for r, row in enumerate(modelos):
             index = self.data.index(r, 0, QtCore.QModelIndex())
-            self.data.setData(index, row['marca_id'])
+            self.data.setData(index, row['modelo'])
             index = self.data.index(r, 1, QtCore.QModelIndex())
-            self.data.setData(index, row['Modelo'])
+            self.data.setData(index, row['Marca'])
             index = self.data.index(r, 2, QtCore.QModelIndex())
-            self.data.setData(index, row['Motor'])
+            self.data.setData(index, row['motor'])
             index = self.data.index(r, 3, QtCore.QModelIndex())
-            self.data.setData(index, row['Peso'])
+            self.data.setData(index, row['peso'])
             index = self.data.index(r, 4, QtCore.QModelIndex())
-            self.data.setData(index, row['Descripcion'])
+            self.data.setData(index, row['rendimiendo'])
             index = self.data.index(r, 5, QtCore.QModelIndex())
-            self.data.setData(index, row['Rendimiento'])
-            index = self.data.index(r, 6, QtCore.QModelIndex())
-            self.data.setData(index, row['Imagen'])
-            index = self.data.index(r, 7, QtCore.QModelIndex())
-            self.data.setData(index, row['Fecha'])
-            index = self.data.index(r, 8, QtCore.QModelIndex())
-            self.data.setData(index, row['Precio'])
-            index = self.data.index(r, 9, QtCore.QModelIndex())
             self.data.setData(index, row['Ventas'])
+            index = self.data.index(r, 6, QtCore.QModelIndex())
+            self.data.setData(index, row['fecha'])
+            index = self.data.index(r, 7, QtCore.QModelIndex())
+            self.data.setData(index, row['descripcion'])
+            index = self.data.index(r, 8, QtCore.QModelIndex())
+            self.data.setData(index, row['precio_lista'])
 
-        self.ui.tabla_modelos.setModel(self.data)
+        self.ui.tableView.setModel(self.data)
 
-        # Para que las columnas 1 y 2 se estire o contraiga cuando
-        # se cambia el tamaño de la pantalla
-        self.ui.tabla_modelos.horizontalHeader().setResizeMode(
-            0, self.ui.tabla_modelos.horizontalHeader().Stretch)
-        self.ui.tabla_modelos.horizontalHeader().setResizeMode(
-            1, self.ui.tabla_modelos.horizontalHeader().Stretch)
+        self.ui.tableView.horizontalHeader().setResizeMode(
+            0, self.ui.tableView.horizontalHeader().Stretch)
+        self.ui.tableView.horizontalHeader().setResizeMode(
+            7, self.ui.tableView.horizontalHeader().Stretch)
 
-        self.ui.tabla_modelos.setColumnWidth(0, 100)
-        self.ui.tabla_modelos.setColumnWidth(1, 210)
-        self.ui.tabla_modelos.setColumnWidth(2, 210)
+        self.ui.tableView.setColumnWidth(0, 100)
+        self.ui.tableView.setColumnWidth(7, 210)
 
     def delete(self):
         """
@@ -104,20 +104,23 @@ class Main(QtGui.QMainWindow):
         indica el resultado de la operación
         """
 
-        # ANTES DE REALIZAR LA ACCIÓN SE DEBERÍA PREGUNTAR
-        # AL USUARIO CONFIRMAR LA OPERACIÓN !!!!!!!!!!!!!!
-        data = self.ui.tabla_modelos.model()
-        index = self.ui.tabla_modelos.currentIndex()
+        data = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
         if index.row() == -1:  # No se ha seleccionado una fila
             self.errorMessageDialog = QtGui.QErrorMessage(self)
             self.errorMessageDialog.showMessage(u"Debe seleccionar una fila")
             return False
         else:
-            if tkMessageBox.askyesno(
-                "Borrar Marca", "Deseas borrar esta marca?"):
+            self.resp = QtGui.QMessageBox.question(
+                self,"Borrar",
+                "Deseas borrar esta marca?",
+                QtGui.QMessageBox.Yes,
+                QtGui.QMessageBox.No);
+            
+            if self.resp == QtGui.QMessageBox.Yes:
                 marca = data.index(
                     index.row(), 0, QtCore.QModelIndex()).data()
-                if (db.borrar(marca)):
+                if (db.borrar_elemento("modelo","modelo",marca)):
                     self.load_data()
                     msgBox = QtGui.QMessageBox()
                     msgBox.setText(u"EL registro fue eliminado.")
@@ -130,7 +133,7 @@ class Main(QtGui.QMainWindow):
                     return False
 
     ########### rehacer..
-    def edit(self):
+    def editar(self):
         """
         Función obtiene el alumno seleccionado en la grilla
         para poner sus datos en el formulario para su edición
@@ -143,7 +146,7 @@ class Main(QtGui.QMainWindow):
             return False
         else:
             nom_marca = data.index(index.row(), 0, QtCore.QModelIndex()).data()
-            self.ui.form = FormMarca(self, nom_marca)
+            self.ui.form = FormModelo(self, nom_marca)
             self.ui.form.accepted.connect(self.load_data)
             self.ui.form.show()
         

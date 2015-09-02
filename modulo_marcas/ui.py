@@ -36,6 +36,10 @@ class Ui_MainWindow(object):
         self.tabla_marcas = QtGui.QTableView(self.widget_2)
         self.tabla_marcas.setGeometry(QtCore.QRect(10, 10, 571, 291))
         self.tabla_marcas.setObjectName("tabla_marcas")
+        self.tabla_marcas.setAlternatingRowColors(True)
+        self.tabla_marcas.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.tabla_marcas.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 620, 20))
