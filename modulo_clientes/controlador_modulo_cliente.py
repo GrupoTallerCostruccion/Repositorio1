@@ -51,9 +51,9 @@ class Main(QtGui.QMainWindow):
             r=r+1
         self.ui.tableView.setModel(self.model)
 
-        self.ui.tableView.setColumnWidth(0, 50)
-        self.ui.tableView.setColumnWidth(1, 65)
-        self.ui.tableView.setColumnWidth(2, 200)
+        self.ui.tableView.setColumnWidth(0, 100)
+        self.ui.tableView.setColumnWidth(1, 100)
+        self.ui.tableView.setColumnWidth(2, 150)
         self.ui.tableView.setColumnWidth(3, 150)
         self.ui.tableView.setColumnWidth(4, 150)
         self.ui.tableView.setColumnWidth(5, 100)
@@ -99,16 +99,16 @@ class Main(QtGui.QMainWindow):
         if index.row() == -1: #No se ha seleccionado una fila
             rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
             print rut
-            formulario = controlador_formulario_registro.Display(self)
-            formulario.exec_()
+            self.formulario = Display(self)
             self.cargar_datos("")
+            self.formulario.show()
         else:
             rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
             print rut
             formulario = Display(self)
             formulario.editar(rut)
-            formulario.exec_()
             self.cargar_datos("")
+            self.formulario.show()
 
     def iniciar_botones(self):
         """
@@ -121,8 +121,8 @@ class Main(QtGui.QMainWindow):
 
 
     def agregar_cliente(self):
-        formulario = Display(self)
-        formulario.exec_()
+        self.formulario = Display(self)
+        self.formulario.show()
         self.cargar_datos("")
 
         

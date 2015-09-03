@@ -23,7 +23,8 @@ def obtener_marcas():
     AS 'Cantidad de Modelos'   
     FROM marca JOIN modelo 
     ON modelo.marca_id = marca.id 
-    GROUP BY marca.id """
+    GROUP BY marca.id
+    HAVING 'Cantidad de Modelos'>=0"""
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()

@@ -27,38 +27,42 @@ def datos_clientes(rut):
     return prod
 
 def agregar_cliente(rut,nombre,apellido,telefono,correo):
-    print rut
-    print nombre
-    """Agrega una fila en la tabla clientes con los valores entregados."""
+    """
+    Agrega una fila en la tabla clientes con los valores entregados
+    """
     con = conectar()
     c = con.cursor()
     try:
         query = """INSERT INTO cliente(rut,
             nombre,apellido,telefono,correo) VALUES (?,?,?,?,?)"""
         resultado = c.execute(query,[rut,nombre,apellido,telefono,correo])
-        print "se agrego un producto"
+        print "se agrego un cliente"
     except sqlite3.Error as e:
         exito = False
         print "Error:", e.args[0]
-    index = c.fetchone()
+    index = c.fetchall()
     con.commit()
     con.close()
     return index
 
 
 
-def editar_cliente(nombre,apellido,telefono,correo,rut):
+def editar_cliente(rutID,nombre,apellido,telefono,correo,rut):
     """Edita una fila en la tabla productos con los valores entregados."""
     con = conectar()
     c = con.cursor()
     try:
-        query = """UPDATE cliente SET  nombre = ?, apellido = ?,
-            telefono = ?, correo = ?,  WHERE rut = ?"""
-        resultado = c.execute(query,[nombre,apellido,telefono,correo,rut])
+        print "en el try editar_cliente"
+        query = """UPDATE cliente SET  rut = '{}', nombre = '{}',
+            apellido = '{}',telefono = '{}', correo = '{}'
+            WHERE rut = '{}' """.format(
+                rut,nombre,apellido,telefono,correo,rutID)
+        resultado = c.execute(query)
     except sqlite3.Error as e:
+        print "en el except editar_cliente"
         exito = False
         print "Error:", e.args[0]
-    index = c.fetchone()
+    index = c.fetchall()
     con.commit()
     con.close()
     return True
@@ -70,7 +74,7 @@ def obtener_clientes():
     con = conectar()
     c = con.cursor()
     query = """SELECT  rut,nombre,apellido,telefono,correo, 
-        COUNT(cliente_rut)  AS "Autos Comprados" 
+        COUNT(auto.cliente_rut)  AS "Autos Comprados" 
         FROM cliente
         JOIN auto ON auto.cliente_rut = cliente.rut 
         GROUP BY cliente.rut"""

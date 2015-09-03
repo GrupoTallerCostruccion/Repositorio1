@@ -16,7 +16,7 @@ class Display(QtGui.QDialog):
         self.apellido= ""
         self.ui.setupUi(self)
         self.iniciar_botones()
-
+        self.rut = 0
 
 
     def iniciar_botones(self):
@@ -30,7 +30,6 @@ class Display(QtGui.QDialog):
         self.reject()
 
     def guardar(self):
-        print "hola hola"
         print self.editado
         """
         Función que guarda los cambios hechos en la tabla de clientes. La forma
@@ -39,6 +38,7 @@ class Display(QtGui.QDialog):
         """
         if(self.editado):
             manejo_bd_clientes.editar_cliente(
+                self.rut,
                 unicode(self.ui.linea_nombre.text()),
                 unicode(self.ui.linea_apellido.text()),
                 unicode(self.ui.linea_telefono.text()),
@@ -46,15 +46,16 @@ class Display(QtGui.QDialog):
                 unicode(self.ui.linea_rut.text()))
         else:
             manejo_bd_clientes.agregar_cliente(
-                unicode(self.ui.linea_nombre.text()),
-                unicode(self.ui.linea_apellido.text()),
-                unicode(self.ui.linea_telefono.text()),
-                unicode(self.ui.linea_cliente.text()),
-                unicode(self.ui.linea_rut.text()))
+                self.ui.linea_rut.text(),
+                self.ui.linea_nombre.text(),
+                self.ui.linea_apellido.text(),
+                self.ui.linea_telefono.text(),
+                self.ui.linea_cliente.text()
+                )
         self.reject()
 
     def editar(self, rut):
-        print rut
+        self.rut = rut
         """
         Función que carga los datos de un producto en el formulario para poder
         editarlos.
