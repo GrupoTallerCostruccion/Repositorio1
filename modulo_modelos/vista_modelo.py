@@ -97,6 +97,8 @@ class Main(QtGui.QMainWindow):
 
         self.ui.tableView.setColumnWidth(0, 100)
         self.ui.tableView.setColumnWidth(7, 210)
+        self.data = self.ui.tableView.selectionModel()
+        self.data.currentChanged.connect(self.cambiaFila)
 
     def delete(self):
         """
@@ -132,14 +134,25 @@ class Main(QtGui.QMainWindow):
                         u"Error al eliminar el registro")
                     return False
 
+    def cambiaFila(self,index,indexp):
+        model = self.ui.tableView.model()
+        ind = model.index(index.row(), 0, QtCore.QModelIndex()).data()
+        auto = db.obtenerAutoMod(ind)
+        url = str(auto[0]['imagen'])
+        print url
+        pmap = QtGui.QPixmap(url)
+        pmap = pmap.scaled(250,200,QtCore.Qt.KeepAspectRatio)
+        self.ui.foto.setPixmap(pmap)
+        #self.ui.descripcion.setText(str(auto[0]['descripcion']))
+
     ########### rehacer..
     def editar(self):
         """
         Función obtiene el alumno seleccionado en la grilla
         para poner sus datos en el formulario para su edición
         """
-        data = self.ui.tabla_modelos.model()
-        index = self.ui.tabla_modelos.currentIndex()
+        data = self.ui.tableView.model()
+        index = self.ui.tableView.currentIndex()
         if index.row() == -1:  # No se ha seleccionado una fila
             self.errorMessageDialog = QtGui.QErrorMessage(self)
             self.errorMessageDialog.showMessage(u"Debe seleccionar una fila")

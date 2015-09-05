@@ -35,9 +35,9 @@ class Main(QtGui.QMainWindow):
         #Creamos el modelo asociado a la tabla
         self.data = QtGui.QStandardItemModel(len(marcas)+1, 3)
         self.data.setHorizontalHeaderItem(
-            0, QtGui.QStandardItem(u"Nombre de Marca"))
+            0, QtGui.QStandardItem("Nombre de Marca"))
         self.data.setHorizontalHeaderItem(
-            1, QtGui.QStandardItem(u"País de Origen"))
+            1, QtGui.QStandardItem("Pais de Origen"))
         self.data.setHorizontalHeaderItem(
             2, QtGui.QStandardItem(u"Cantidad de Modelos"))
 
@@ -45,7 +45,7 @@ class Main(QtGui.QMainWindow):
             index = self.data.index(r, 0, QtCore.QModelIndex())
             self.data.setData(index, row['Nombre de Marca'])
             index = self.data.index(r, 1, QtCore.QModelIndex())
-            self.data.setData(index, row['País de Origen'])
+            self.data.setData(index, row['Pais de Origen'])
             index = self.data.index(r, 2, QtCore.QModelIndex())
             self.data.setData(index, row['Cantidad de Modelos'])
 

@@ -27,7 +27,7 @@ class Display(QtGui.QDialog):
         self.ui.cancelar_bt.clicked.connect(self.cancelar)
 
     def cancelar(self):
-        self.reject()
+        self.close()
 
     def guardar(self):
         print self.editado
@@ -52,7 +52,7 @@ class Display(QtGui.QDialog):
                 self.ui.linea_telefono.text(),
                 self.ui.linea_cliente.text()
                 )
-        self.reject()
+        self.close()
 
     def editar(self, rut):
         self.rut = rut

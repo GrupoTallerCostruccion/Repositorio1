@@ -6,7 +6,7 @@ import tkMessageBox as msje
 
 
 def conectar():
-    con = sqlite3.connect('../Automotora.db')
+    con = sqlite3.connect('Automotora.db')
     con.row_factory = sqlite3.Row
     return con
 
@@ -41,7 +41,18 @@ def borrar_elemento(tabla, nombre_columna, parametro):
     cursor.close()
     return exito
 
-
+def obtenerAutoMod(mod):
+    """
+    metodo que pone la imagen y descripcion al seleccionar
+    una fila en la tabla.
+    """
+    con = conectar()
+    c = con.cursor()
+    query = "SELECT * FROM modelo WHERE modelo = ?"
+    resultado = c.execute(query, [mod])
+    auto = resultado.fetchall()
+    con.close()
+    return auto
 
 def obtener_marcas():
     query = """SELECT marca.nombre AS 'Nombre de Marca',
@@ -62,11 +73,30 @@ def obtener_modelos():
     query="""SELECT modelo, marca.nombre AS Marca, motor, peso, rendimiendo, 
     COUNT(modelo.id) AS "Ventas",  
     fecha_creacion AS Fecha, descripcion, precio_lista
-    FROM modelo, auto, marca
-    WHERE auto.modelo_id = modelo.id AND
-    modelo.marca_id = marca.id
+    FROM modelo
+    LEFT JOIN auto ON auto.modelo_id = modelo.id 
+    LEFT JOIN marca ON  modelo.marca_id = marca.id
     GROUP BY modelo.id"""
     return obtener_query(query)
+
+def obtener_modelo(nombre):
+    """Obtiene la fila en la tabla de  modelos."""
+    con = conectar()
+    c = con.cursor()
+    prod,resultado=None
+    try:
+        query = """SELECT modelo, marca.nombre AS Marca, motor,
+        peso, rendimiendo, COUNT(modelo.id) AS "Ventas",  
+        fecha_creacion AS Fecha, descripcion, precio_lista
+        FROM modelo WHERE  modelo = ?"""
+        resultado = c.execute(query,[nombre])
+        
+    except sqlite3.Error as e:
+        exito = False
+        print "Error:", e.args[0]
+    con.close()
+    prod = resultado.fetchall()
+    return prod
 
 #####################################
 
@@ -76,18 +106,19 @@ def buscar_modelos(parametro):
     marcas de modelos. Parametro ingresado desde el lineedit de busqueda
     """
 
-    query="""SELECT modelo, marca.nombre AS Marca, motor, peso,
+    query="""SELECT modelo, marca.nombre AS 'Marca', motor, peso,
     rendimiendo, COUNT(modelo.id) AS "Ventas",  
     fecha_creacion AS Fecha, descripcion, precio_lista
-    FROM modelo, auto, marca
+    FROM modelo
     
-    WHERE auto.modelo_id = modelo.id AND
-    modelo.marca_id = marca.id AND
+    LEFT JOIN auto ON modelo.id  = auto.modelo_id 
+    LEFT JOIN  marca ON  modelo.marca_id = marca.id WHERE
     
-    Marca LIKE '%{}%' OR modelo LIKE '%{}%'
+    modelo LIKE '%{}%'  OR Marca LIKE '%{}%'
     OR motor LIKE '%{}%' or peso LIKE '%{}%'
     or Fecha LIKE '%{}%' or precio_lista LIKE '%{}%'
     or descripcion LIKE '%{}%' or rendimiendo LIKE '%{}%'
+    
     GROUP BY modelo.id""".format(
         parametro,parametro,parametro,parametro,parametro,parametro,
         parametro,parametro)
@@ -109,14 +140,16 @@ def obtener_marca_pais(pais):
     con.close()
     return marcas
 
-def crear_marca(marca,pais):
+def crear_Modelo(
+    mar,mod,mot,pes,precio,rend,fec,img,descrip):
     c = conectar()
     sql = (
-        "INSERT INTO marca (marca,pais)"
-        "VALUES (?, ?)")
-    c.execute(sql, (rut, nombres, apellidos, correo))
+        "INSERT INTO modelo (marca_id,modelo,motor,peso,descripcion,"
+        "rendimiendo, imagen,fecha_creacion,precio_lista)"
+        "VALUES (?, ?,?,?,?,?,?,?,?)")
+    c.execute(sql, (mar,mod,mot,pes,descrip,rend,img,fec,precio))
     con.commit()
-    msje.showinfo(title="Crear Marca", message="Marca registrada en la bd!")
+    #msje.showinfo(title="Crear Marca", message="Marca registrada en la bd!")
 
 
 

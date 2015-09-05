@@ -19,12 +19,11 @@ def obtener_marcas():
     con = conectar()
     c = con.cursor()
     query = """SELECT marca.nombre AS 'Nombre de Marca', 
-    marca.pais AS 'País de Origen',COUNT(marca.id)   
+    marca.pais AS 'Pais de Origen',COUNT(marca.id)   
     AS 'Cantidad de Modelos'   
-    FROM marca JOIN modelo 
-    ON modelo.marca_id = marca.id 
-    GROUP BY marca.id
-    HAVING 'Cantidad de Modelos'>=0"""
+    FROM marca LEFT JOIN modelo 
+    ON  marca.id =  modelo.marca_id 
+    GROUP BY marca.id"""
     resultado = c.execute(query)
     marcas = resultado.fetchall()
     con.close()

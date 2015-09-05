@@ -1,0 +1,1 @@
+ojo, la vista modelo solo se puede ver desde la vista :Automotora_Main.py

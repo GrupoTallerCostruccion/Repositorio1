@@ -16,10 +16,10 @@ class Main(QtGui.QMainWindow):
         self.ui.setupUi(self)
         
         self.iniciar_botones()
-        self.cargar_datos("")
+        self.cargar_datos()
         self.show()
 
-    def cargar_datos(self, text):
+    def cargar_datos(self):
         """
         Función que se encarga de mostrar la tabla clientes,
         """
@@ -39,9 +39,9 @@ class Main(QtGui.QMainWindow):
             index = self.model.index(r, 0, QtCore.QModelIndex())
             self.model.setData(index, row['rut'])
             index = self.model.index(r, 1, QtCore.QModelIndex())
-            self.model.setData(index, row['nombre'])
+            self.model.setData(index, row['nombres'])
             index = self.model.index(r, 2, QtCore.QModelIndex())
-            self.model.setData(index, row['apellido'])
+            self.model.setData(index, row['apellidos'])
             index = self.model.index(r, 3, QtCore.QModelIndex())
             self.model.setData(index, row['telefono'])
             index = self.model.index(r, 4, QtCore.QModelIndex())
@@ -80,7 +80,7 @@ class Main(QtGui.QMainWindow):
                 rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
                 if (manejo_bd_clientes.eliminar_cliente(rut)):
                   
-                    self.cargar_datos("")
+                    self.cargar_datos()
                     return True
                 else:
                     self.ui.errorMessageDialog = QtGui.QErrorMessage(self)
@@ -100,14 +100,14 @@ class Main(QtGui.QMainWindow):
             rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
             print rut
             self.formulario = Display(self)
-            self.cargar_datos("")
+            self.cargar_datos()
             self.formulario.show()
         else:
             rut = model.index(index.row(), 0, QtCore.QModelIndex()).data()
             print rut
             formulario = Display(self)
             formulario.editar(rut)
-            self.cargar_datos("")
+            self.cargar_datos()
             self.formulario.show()
 
     def iniciar_botones(self):
@@ -123,9 +123,8 @@ class Main(QtGui.QMainWindow):
     def agregar_cliente(self):
         self.formulario = Display(self)
         self.formulario.show()
-        self.cargar_datos("")
+        self.formulario.accepted.connect(self.cargar_datos)
 
-        
     def realizar_compra(self):
         model = self.ui.tableView.model()
         index = self.ui.tableView.currentIndex()
@@ -139,7 +138,7 @@ class Main(QtGui.QMainWindow):
             formulario = controlador_form_compra.Display(self)
             formulario.rellenar(rut)
             formulario.exec_()
-            self.cargar_datos("")
+            self.cargar_datos()
 
 
 if __name__ == '__main__':

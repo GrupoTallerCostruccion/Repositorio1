@@ -28,17 +28,17 @@ class FormModelo(QtGui.QDialog):
         Coloca los datos de la Modelo en los widgets
         para su edición
         """
-        Modelo = model.obtener_Modelo(nombre)
+        Modelo = model.obtener_modelo(nombre)
         
-        self.ui.modelo.setText(Modelo[modelo])
-        self.ui.motor.setText(Modelo[motor])
-        self.ui.peso.setText(Modelo[peso])
-        self.ui.precio.setText(Modelo[precio_lista])
-        self.ui.rendim.setText(Modelo[rendimiendo])
-        self.ui.fecha.setText(Modelo[fecha_creacion])
-        self.ui.imagen.setText(Modelo[imagen])
+        self.ui.modelo.setText(Modelo["modelo"])
+        self.ui.motor.setText(Modelo["motor"])
+        self.ui.peso.setText(Modelo["peso"])
+        self.ui.precio.setText(Modelo["precio_lista"])
+        self.ui.rendim.setText(Modelo["rendimiendo"])
+        self.ui.fecha.setText(Modelo["fecha_creacion"])
+        self.ui.imagen.setText(Modelo["imagen"])
         self.ui.textEdit.setText(Modelo[descripcion])
-        self.ui.marca.setText(Modelo[marca])
+        self.ui.marca.setText(Modelo[Marca])
 
     def obtener_datos(self):
         """
@@ -53,23 +53,28 @@ class FormModelo(QtGui.QDialog):
         rendim = self.ui.rendim.text()
         fecha = self.ui.fecha.text()
         imagen = self.ui.imagen.text()
-        descrip = self.ui.textEdit.text()
+        descrip = self.ui.textEdit.toPlainText()
         
         return (marca,modelo,motor,peso,precio,rendim,fecha,
                 imagen,descrip)
 
     def crear_Modelo(self):
         mar,mod,mot,pes,precio,rend,fec,img,descrip = self.obtener_datos()
-        try:
-            model.crear_Modelo(
-                mar,mod,mot,pes,precio,rend,fec,img,descrip)
-            self.accepted.emit()
-            self.alerta("Modelo Creada")
-            self.close()
-        except Exception,e:
-            print (e)
-            self.alerta("ERROR, Modelo no pudo ser guardada!")
-            self.close()
+        if (mar!="" and mod!="" and mot!="" and pes!="" and
+            precio!="" and rend !="" and fec!="" and img!=""):
+            try:
+                model.crear_Modelo(
+                    mar,mod,mot,pes,precio,rend,fec,img,descrip)
+                self.accepted.emit()
+                self.alerta("Modelo Creada")
+                self.close()
+            except Exception,e:
+                print (e)
+                self.alerta("ERROR, Modelo no pudo ser guardada!")
+                self.close()
+        else:
+            self.alerta("Faltan datos por agregar."
+                        "Complete todos los campos.")
 
     def alerta(self, msje):
         """

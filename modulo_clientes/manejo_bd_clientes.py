@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-import tkMessageBox as msje
-from array import *
 "manejo_bd para el modulo de clientes"
 
 def conectar():
@@ -34,12 +32,12 @@ def agregar_cliente(rut,nombre,apellido,telefono,correo):
     c = con.cursor()
     try:
         query = """INSERT INTO cliente(rut,
-            nombre,apellido,telefono,correo) VALUES (?,?,?,?,?)"""
+            nombres,apellidos,telefono,correo) VALUES (?,?,?,?,?)"""
         resultado = c.execute(query,[rut,nombre,apellido,telefono,correo])
         print "se agrego un cliente"
     except sqlite3.Error as e:
         exito = False
-        print "Error:", e.args[0]
+        print "Error agregar cliente:", e.args[0]
     index = c.fetchall()
     con.commit()
     con.close()
@@ -52,18 +50,17 @@ def editar_cliente(rutID,nombre,apellido,telefono,correo,rut):
     con = conectar()
     c = con.cursor()
     try:
-        print "en el try editar_cliente"
-        query = """UPDATE cliente SET  rut = '{}', nombre = '{}',
-            apellido = '{}',telefono = '{}', correo = '{}'
+        query = """UPDATE cliente SET  rut = '{}', nombres = '{}',
+            apellidos = '{}',telefono = '{}', correo = '{}'
             WHERE rut = '{}' """.format(
                 rut,nombre,apellido,telefono,correo,rutID)
         resultado = c.execute(query)
+        con.commit()
     except sqlite3.Error as e:
-        print "en el except editar_cliente"
         exito = False
-        print "Error:", e.args[0]
+        print "Error editar cliente:", e.args[0]
     index = c.fetchall()
-    con.commit()
+    #con.commit()
     con.close()
     return True
 
@@ -73,13 +70,19 @@ def obtener_clientes():
     """
     con = conectar()
     c = con.cursor()
-    query = """SELECT  rut,nombre,apellido,telefono,correo, 
+    prod = None
+    query = """SELECT  rut,nombres,apellidos,telefono,correo, 
         COUNT(auto.cliente_rut)  AS "Autos Comprados" 
         FROM cliente
-        JOIN auto ON auto.cliente_rut = cliente.rut 
-        GROUP BY cliente.rut"""
-    resultado = c.execute(query)
-    prod = resultado.fetchall()
+        LEFT JOIN auto ON auto.cliente_rut = cliente.rut 
+        GROUP BY cliente.rut """
+    try:
+        resultado = c.execute(query)
+        prod = resultado.fetchall()
+    except sqlite3.Error as e:
+        exito = False
+        print "Error obtener cliente:", e.args[0]
+
     con.close()
     return prod
 
@@ -132,7 +135,8 @@ def crear_cliente(rut,nombres,apellidos,telefono,correo):
         "VALUES (?,?,?,?,?)")
     c.execute(sql, (rut, nombres, apellidos, telefono, correo))
     con.commit()
-    msje.showinfo(title="Crear cliente", message="cliente registrada en la bd!")
+    
+    #msje.showinfo(title="Crear cliente", message="cliente registrada en la bd!")
 
 def eliminar_cliente(rut):
     exito = False
