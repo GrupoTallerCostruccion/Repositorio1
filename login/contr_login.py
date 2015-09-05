@@ -3,6 +3,7 @@
 import sys
 from PySide import QtGui, QtCore
 from login import Ui_MainWindow
+import menu_controlador
 import manejo_bd
 
 class Main(QtGui.QMainWindow):
@@ -14,8 +15,6 @@ class Main(QtGui.QMainWindow):
         self.show()
         self.iniciar_botones()
 
-
-
     def iniciar_botones(self):
         """
         Funcion que inicia las señales de los objetos
@@ -25,24 +24,16 @@ class Main(QtGui.QMainWindow):
 
 
     def entra(self):
-        
-        menu = controladorMenu.Display(self)
-        menu.exec_()
-
-
-        """clave = manejo_bd.consulta_clave(unicode(self.ui.lineEdit.text()))
-        clave2 = clave[0]
-        print type(clave2)
-        clave1 =unicode(self.ui.lineEdit.text())
-        print type(clave1)
-        if clave2 ==clave1:
-            menu = controladorMenu.Display(self)
-            menu.exec_()
+        datos = manejo_bd.consulta_claves()
+        for row in datos:
+            print row['id']
+            if(row['id']==str(self.ui.lineEdit.text()) and row['pass']==str(self.ui.lineEdit_2.text())):
+                menu = menu_controlador.Main(self)
+                menu.exec_
+       
         else:
-            menu = controladorMenu.Display(self)
-            menu.exec_()
-            #self.errorMessageDialog = QtGui.QErrorMessage(self)
-            #self.errorMessageDialog.showMessage("error de ingreso")"""
+            self.errorMessageDialog = QtGui.QErrorMessage(self)
+            self.errorMessageDialog.showMessage("error de ingreso")
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     main = Main()

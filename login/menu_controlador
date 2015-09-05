@@ -1,0 +1,36 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import sys
+from PySide import QtGui, QtCore
+from menu import Ui_MainWindow
+import manejo_bd
+
+class Main(QtGui.QMainWindow):
+
+    def __init__(self,parent=None):
+        super(Main, self).__init__(parent)
+        self.ui =  Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.show()
+        #self.iniciar_botones()
+
+
+
+    def iniciar_botones(self):
+        """
+        Funcion que inicia las señales de los objetos
+        """
+        self.ui.BotonMarcas.clicked.connect(self.entraMarca)
+        self.ui.BotonClientes.clicked.connect(self.entraCliente)
+        self.ui.BotonModelos.clicked.connect(self.entraModelo)
+        
+
+
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    main = Main()
+    sys.exit(app.exec_())
+
+
+
+        
